@@ -1,4 +1,4 @@
-import StrategyPaint
+import IHM.StrategyPaint as StrategyPaint
 
 
 class display:

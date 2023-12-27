@@ -1,4 +1,4 @@
-from Plateau import Plateau
+from IHM.Plateau import Plateau
 from Config.Configuration import Configuration
 
 class Builder:

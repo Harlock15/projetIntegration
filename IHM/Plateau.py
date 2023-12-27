@@ -1,4 +1,4 @@
-from case import *
+from IHM.case import case
 class Plateau:
     def __init__(self, line_count, column_count):
         self.line_count = line_count
