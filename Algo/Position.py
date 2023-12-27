@@ -1,5 +1,5 @@
 class Position:
-    def __init__(self, coup_joue):
+    def __init__(self, coup_joue:str):
         self.WIDTH = 7
         self.HEIGHT = 6
         self.coup_joue = coup_joue
@@ -12,10 +12,11 @@ class Position:
         self.board[colonne][self.height[colonne]] = 1 + self.moves%2
         self.height[colonne] += 1
         self.moves += 1
+        self.coup_joue += str(colonne+1)
 
     def isWinningMove(self, colonne):
         current_player = 1 + self.moves%2
-        if self.height[colonne] >= 3 and self.board[colonne][self.height[colonne] - 1] == current_player and self.board[colonne][self.height[colonne] - 2] == current_player and self.board[colonne][self.height[colonne] - 3] == current_player:
+        if self.height[colonne] >= 3 and self.board[colonne][self.height[colonne]-1] == current_player and self.board[colonne][self.height[colonne] - 2] == current_player and self.board[colonne][self.height[colonne] - 3] == current_player:
             return True
 
         for i in range(-1, 2):
@@ -34,6 +35,12 @@ class Position:
     def nbMove(self):
         return self.moves
 
+    def affBoard(self):
+        for j in range(5,-1,-1):
+            for i in range(7):
+                print(self.board[i][j], end="|")
+            print("")
+
     def readString(self):
         move = len(self.coup_joue)  # Le nombre de coup joue
         height = [0, 0, 0, 0, 0, 0, 0]  # Le nombre de jeton par colonne
@@ -49,12 +56,7 @@ class Position:
         for i in range(len(self.coup_joue)):
             board[int(self.coup_joue[i])-1][height[int(self.coup_joue[i])-1]] = 1 + i % 2
             height[int(self.coup_joue[i]) - 1] += 1
-            print(board)
-            print('\n')
 
-        print(height)
-        print('\n')
-        print(move)
         return board, height, move
 
 
