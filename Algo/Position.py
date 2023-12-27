@@ -19,15 +19,16 @@ class Position:
             return True
 
         for i in range(-1, 2):
-            nb = 0;
-            for ii in range(-1, 2, 2):
-                x = colonne + i
+            nb = 0
+            for ii in [-1, 1]:
+                x = colonne + ii
                 y = self.height[colonne] + i*ii
                 while 0 <= x < self.WIDTH and 0 <= y < self.HEIGHT and self.board[x][y] == current_player:
                     nb += 1
-                    x = i
-                    y = i*ii
-            if nb >= 3 : return True
+                    x += ii
+                    y += i*ii
+            if nb >= 3:
+                return True
         return False
 
     def nbMove(self):
