@@ -1,7 +1,7 @@
 import tkinter as tk
 
-from StrategyPaint import GameBoard
-from builder import Builder
+from IHM.StrategyPaint import GameBoard
+from IHM.builder import Builder
 
 
 def main():

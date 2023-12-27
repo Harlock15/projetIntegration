@@ -1,5 +1,5 @@
 from Plateau import Plateau
-from Configuration import Configuration
+from Config.Configuration import Configuration
 
 class Builder:
     @staticmethod
