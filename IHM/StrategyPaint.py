@@ -1,8 +1,6 @@
 import tkinter as tk
 
-import Configuration
-from Plateau import *
-from builder import Builder
+from Config import Configuration
 
 
 class GameBoard:
