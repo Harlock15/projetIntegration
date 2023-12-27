@@ -14,7 +14,7 @@ class Negamax:
 
         for i in range(7):
             if(pos.canPlay(i) and pos.isWinningMove(i)):
-                return ((pos.WIDTH*pos.HEIGHT) - pos.nbMove()//2)
+                return ((pos.WIDTH*pos.HEIGHT+1 - pos.nbMove())//2)
 
         self.best_score = -(pos.WIDTH*pos.HEIGHT)
 
@@ -40,7 +40,7 @@ class Negamax:
 
 
 if __name__=="__main__":
-    coup_joue = "52677675164321472411331752454"
+    coup_joue = "65214673556155731566316327373221417"
     pos = Position(coup_joue)
     pos.affBoard()
     s = Negamax()
