@@ -25,13 +25,17 @@ class Benchmark:
                 s = Negamax()
                 scoreObt = s.negamax(pos)
 
+                self.nodeParcTot += s.noeuds_parcourus
+
                 if(str(scoreObt) != scoreAtt):
                     print(f"Erreur Ligne {i+1} | ScoreObt: {scoreObt} ScoreAtt: {scoreAtt}")
                 else:
                     self.nbrTestOk += 1
                     print(f"{i+1}/{self.nbrTotTest} -> OK")
 
+            self.nodeParcMoy = self.nodeParcTot/self.nbrTotTest
             print(f"Test reussi: {self.nbrTestOk}/{self.nbrTotTest}")
+            print(f"Moy Noeud Parcourus: {self.nodeParcMoy}")
 
 
 
