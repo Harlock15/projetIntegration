@@ -62,5 +62,14 @@ class Position:
 
 
 if __name__=="__main__":
-    coup_joue = "32164625"
+    coup_joue = "313131"
     pos = Position(coup_joue)
+    pos.affBoard()
+    print(pos.isWinningMove(3))
+    print(pos.canPlay(3))
+    pos.play(3)
+
+    pos.play(3)
+    pos.play(3)
+    pos.affBoard()
+    print(pos.canPlay(3))
