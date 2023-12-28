@@ -40,7 +40,7 @@ class Negamax:
 
 
 if __name__=="__main__":
-    coup_joue = "655651721435342216255374674123"
+    coup_joue = "131313"
     pos = Position(coup_joue)
     s = Negamax()
     print('-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-\n',"Score Final:",s.negamax(pos))

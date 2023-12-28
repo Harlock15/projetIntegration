@@ -1,3 +1,5 @@
+import time
+
 from Algo.Negamax import Negamax
 from Algo.Position import Position
 
@@ -11,7 +13,7 @@ class Benchmark:
         self.nodeParcTot = 0
 
     def testNegamax(self):
-        with open("./TestFile/miniTest", 'r') as fichier:
+        with open("./TestFile/Test_L3_R1", 'r') as fichier:
             lignes = fichier.readlines();
             self.nbrTotTest = len(lignes)
             for i in range(self.nbrTotTest):
@@ -23,7 +25,9 @@ class Benchmark:
                 pos = Position(coup_joue)
 
                 s = Negamax()
+                start = time.time()
                 scoreObt = s.negamax(pos)
+                self.tmpTot += time.time() - start
 
                 self.nodeParcTot += s.noeuds_parcourus
 
@@ -34,8 +38,11 @@ class Benchmark:
                     print(f"{i+1}/{self.nbrTotTest} -> OK")
 
             self.nodeParcMoy = self.nodeParcTot/self.nbrTotTest
+            self.moyTmp = self.tmpTot/self.nbrTotTest
+
             print(f"Test reussi: {self.nbrTestOk}/{self.nbrTotTest}")
             print(f"Moy Noeud Parcourus: {self.nodeParcMoy}")
+            print(f"Tmp Moy: {self.moyTmp}")
 
 
 
