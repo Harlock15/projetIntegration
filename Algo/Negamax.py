@@ -7,7 +7,7 @@ class Negamax:
 
 
     def negamax(self, pos:Position):
-        self.noeuds_parcourus+=1
+        self.noeuds_parcourus += 1
 
         if(self.checkDraw(pos)):
             return 0
@@ -16,7 +16,7 @@ class Negamax:
             if(pos.canPlay(i) and pos.isWinningMove(i)):
                 return ((pos.WIDTH*pos.HEIGHT+1 - pos.nbMove())//2)
 
-        self.best_score = -(pos.WIDTH*pos.HEIGHT)
+        best_score = -(pos.WIDTH*pos.HEIGHT)
 
         for x in range(7):
             if(pos.canPlay(x)):
@@ -27,10 +27,10 @@ class Negamax:
 
                 score = -(self.negamax(pos2))
 
-                if(score > self.best_score):
-                    self.best_score = score
+                if(score > best_score):
+                    best_score = score
 
-        return self.best_score
+        return best_score
 
 
     def checkDraw(self, pos:Position):
@@ -40,8 +40,7 @@ class Negamax:
 
 
 if __name__=="__main__":
-    coup_joue = "65214673556155731566316327373221417"
+    coup_joue = "655651721435342216255374674123"
     pos = Position(coup_joue)
-    pos.affBoard()
     s = Negamax()
-    print("Score :",s.negamax(pos))
+    print('-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-\n',"Score Final:",s.negamax(pos))
