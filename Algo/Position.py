@@ -6,16 +6,19 @@ class Position:
         self.board, self.height, self.moves = self.readString()
 
     def canPlay(self, colonne):
+        colonne -= 1
         return self.height[colonne] < self.HEIGHT
 
     def play(self, colonne):
+        colonne -= 1
         self.board[colonne][self.height[colonne]] = 1 + self.moves%2
         self.height[colonne] += 1
         self.moves += 1
         self.coup_joue += str(colonne+1)
 
     def isWinningMove(self, colonne):
-        current_player = 1 + self.moves%2
+        colonne -= 1
+        current_player = 1 + self.moves % 2
         if self.height[colonne] >= 3 and self.board[colonne][self.height[colonne]-1] == current_player and self.board[colonne][self.height[colonne] - 2] == current_player and self.board[colonne][self.height[colonne] - 3] == current_player:
             return True
 
@@ -61,5 +64,14 @@ class Position:
 
 
 if __name__=="__main__":
-    coup_joue = "32164625"
+    coup_joue = "313131"
     pos = Position(coup_joue)
+    pos.affBoard()
+    print(pos.isWinningMove(3))
+    print(pos.canPlay(3))
+    pos.play(3)
+
+    pos.play(3)
+    pos.play(3)
+    pos.affBoard()
+    print(pos.canPlay(3))
