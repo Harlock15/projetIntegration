@@ -13,11 +13,21 @@ class Benchmark:
         self.nodeParcTot = 0
 
     def testNegamax(self):
-        with open("./TestFile/Test_L3_R1", 'r') as fichier:
-            lignes = fichier.readlines();
+        fichtest = ["Test_L3_R1","Test_L2_R1","Test_L2_R2","Test_L1_R1","Test_L1_R2","Test_L1_R3"]
+        for i in fichtest:
+            self.testNegamaxFich(i)
+
+
+    def testNegamaxFich(self, fich):
+        self.nbrTotTest = 0
+        self.tmpTot = 0
+        self.nodeParcTot = 0
+        self.nbrTestOk = 0
+        with open(f"./TestFile/{fich}", 'r') as fichier:
+            lignes = fichier.readlines()
             self.nbrTotTest = len(lignes)
-            for i in range(self.nbrTotTest):
-                ligne = lignes[i].strip().split(' ')
+            for x in range(self.nbrTotTest):
+                ligne = lignes[x].strip().split(' ')
 
                 scoreAtt = ligne[1]
                 coup_joue = ligne[0]
@@ -31,19 +41,16 @@ class Benchmark:
 
                 self.nodeParcTot += s.noeuds_parcourus
 
-                if(str(scoreObt) != scoreAtt):
-                    print(f"Erreur Ligne {i+1} | ScoreObt: {scoreObt} ScoreAtt: {scoreAtt}")
+                if (str(scoreObt) != scoreAtt):
+                    print(f"Erreur Ligne {x + 1} | ScoreObt: {scoreObt} ScoreAtt: {scoreAtt}")
                 else:
                     self.nbrTestOk += 1
-                    print(f"{i+1}/{self.nbrTotTest} -> OK")
 
-            self.nodeParcMoy = self.nodeParcTot/self.nbrTotTest
-            self.moyTmp = self.tmpTot/self.nbrTotTest
+            self.nodeParcMoy = self.nodeParcTot / self.nbrTotTest
+            self.moyTmp = self.tmpTot / self.nbrTotTest
 
-            print(f"Test reussi: {self.nbrTestOk}/{self.nbrTotTest}")
-            print(f"Moy Noeud Parcourus: {self.nodeParcMoy}")
-            print(f"Tmp Moy: {self.moyTmp}")
 
+            print(f"----------\nFichier {fich}\nTest reussi: {self.nbrTestOk}/{self.nbrTotTest}\nMoy Noeud Parcourus: {self.nodeParcMoy}\nTmp Moy: {self.moyTmp}\n----------")
 
 
 if __name__=="__main__":
