@@ -61,7 +61,7 @@ class Position:
         return board, height, move
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     coup_joue = "313131"
     pos = Position(coup_joue)
     pos.affBoard()
