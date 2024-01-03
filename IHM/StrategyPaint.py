@@ -16,7 +16,9 @@ class StrategyPaint:
                 x1, y1 = col * self.cell_size, row * self.cell_size
                 x2, y2 = x1 + self.cell_size, y1 + self.cell_size
                 canvas.create_rectangle(x1, y1, x2, y2)
+        canvas.create_line(2, 0, 2, 600)
         
+
 
     def paintP(self, case, canvas):
         colonne=case.get_colonne()

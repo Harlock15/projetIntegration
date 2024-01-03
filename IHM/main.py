@@ -17,10 +17,14 @@ class Main:
         # Calculer la ligne et la colonne de la case correspondante aux coordonnées du clic
         ligne = y // Configuration.BLOCK_SIZE
         colonne = x // Configuration.BLOCK_SIZE
-        case = Case(colonne, ligne)
-        if self.manager.ajoutPion(colonne):
-            self.strategy_paint.paintP(self.manager.get_case(), canvas)
 
+        # Vérifier si les coordonnées se trouvent dans les limites du plateau
+        if 0 <= ligne < self.manager.plato.get_line_count() and 0 <= colonne < self.manager.plato.get_column_count():
+            case = Case(colonne, ligne)
+            if self.manager.ajoutPion(colonne):
+                self.strategy_paint.paintP(self.manager.get_case(), canvas)
+        else:
+            print("Clic en dehors du plateau.")
 
     def main(self):
         root = tk.Tk()

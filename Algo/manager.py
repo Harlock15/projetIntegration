@@ -30,47 +30,68 @@ class Manager:
 
     def ajoutPion(self, colonne):
         for ligne in range(self.plato.get_line_count() - 1, -1, -1):
-            case = self.plato.get_case(colonne,ligne)
+            case = self.plato.get_case(colonne, ligne)
             if case.estVide():
                 # Créer une instance de la classe Pion avec les bonnes valeurs
                 nouveau_pion = pion((ligne, colonne), self.joueur_actuel)
                 case.set_pion(nouveau_pion)
-                self.case=case
+                self.case = case
                 self.joueur_actuel.get_pions().append(nouveau_pion)
 
-                if not self.verif(self.joueur_actuel.get_pions(), nouveau_pion):
-                    self.prochainTour()
+                if self.verif(colonne
+                              ):
+                    print(f"Le joueur {self.joueur_actuel.get_type()} a gagné !")
+                    # Ajoutez ici toute autre logique pour terminer la partie
+                    # Peut-être réinitialiser le plateau, demander si les joueurs veulent rejouer, etc.
                     return True  # Indiquer que l'ajout de pion a réussi
-                else:
-                    print(f"Fin")
+
+                self.prochainTour()
+                return True  # Indiquer que l'ajout de pion a réussi
 
         print(f"Aucune case vide trouvée dans la colonne {colonne}")
         return False  # Indiquer que l'ajout de pion a échoué
 
-    def verif(self, liste_pion, pionAct):
-        x, y = pionAct.get_position()
+    def verif(self, column):
+        ligne = self.get_last_pion_line(column)
 
-        for dx in range(-1, 2):
-            for dy in range(-1, 2):
-                if dx == 0 and dy == 0:
-                    continue
+        # Vérification horizontale
+        for col in range(max(0, column - 3), min(self.plato.get_column_count() - 2, column + 1)):
+            cases = [self.plato.get_case(ligne, col + i) for i in range(4)]
+            if all(case and case.get_pion() and case.get_pion().get_joueur() == self.joueur_actuel.get_type() for case
+                   in cases):
+                return True
 
-                count = 1  # Commencez le compteur à 1 pour inclure le pion actuel
-                new_x, new_y = x + dx, y + dy
+        # Vérification verticale
+        for row in range(max(0, ligne - 3), min(self.plato.get_line_count() - 2, ligne + 1)):
+            cases = [self.plato.get_case(row + i, column) for i in range(4)]
+            if all(case and case.get_pion() and case.get_pion().get_joueur() == self.joueur_actuel.get_type() for case
+                   in cases):
+                return True
 
-                # Vérifier si les nouvelles coordonnées sont valides
-                if 0 <= new_x < self.plato.get_line_count() and 0 <= new_y < self.plato.get_column_count():
-                    caseDest = self.plato.get_case(new_x, new_y)
+        # Vérification diagonale (de haut à gauche à bas à droite)
+        for i in range(min(column, ligne, 3), min(column + 1, ligne + 1)):
+            cases = [self.plato.get_case(ligne - i + j, column - i + j) for j in range(4)]
+            if all(case and case.get_pion() and case.get_pion().get_joueur() == self.joueur_actuel.get_type() for case
+                   in cases):
+                return True
 
-                    # Vérifier si la case correspond à une position existante
-                    if caseDest and caseDest.get_pion() in liste_pion:
-                        count += 1
-                        if count >= 4:
-                            return True
-                    else:
-                        break
+        # Vérification diagonale (de haut à droite à bas à gauche)
+        for i in range(min(column, self.plato.get_line_count() - 1 - ligne, 3),
+                       min(column + 1, self.plato.get_line_count() - ligne)):
+            cases = [self.plato.get_case(ligne + i - j, column - i + j) for j in range(4)]
+            if all(case and case.get_pion() and case.get_pion().get_joueur() == self.joueur_actuel.get_type() for case
+                   in cases):
+                return True
 
+        # Aucune victoire détectée
         return False
+
+    def get_last_pion_line(self, column):
+        # Retourner la ligne de la dernière case vide dans la colonne
+        for ligne in range(self.plato.get_line_count() - 1, -1, -1):
+            if self.plato.get_case(ligne, column).estVide():
+                return ligne
+        return -1
 
     def get_joueurActuel(self):
         return self.joueur_actuel
