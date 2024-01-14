@@ -1,6 +1,6 @@
 
 
-class pion:
+class Pion:
     def __init__(self, position, joueur):
         self.position = position
         self.joueur = joueur
