@@ -24,11 +24,9 @@ class StrategyPaint:
         colonne=case.get_colonne()
         ligne = case.get_ligne()
 
-        # Ajouter la logique pour obtenir la couleur en fonction du joueur
-        joueur = self.manager.get_joueurActuel()  # Supposons que votre méthode get_joueur retourne le numéro du joueur
-        couleur = "red" if joueur == self.manager.get_joueurX() else "yellow"
 
-        # Dessiner le pion sur la case spécifiée
+        joueur = self.manager.get_joueurActuel()
+        couleur = "red" if joueur == self.manager.get_joueurX() else "yellow"
 
         canvas.create_oval(colonne * self.cell_size, ligne * self.cell_size, (colonne + 1) * self.cell_size,
                            (ligne + 1) * self.cell_size, fill=couleur)

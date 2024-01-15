@@ -2,7 +2,7 @@ class Case:
     def __init__(self, colonne, ligne):
         self.colonne = colonne
         self.ligne = ligne
-        self.pion = None  # Initialise à None pour indiquer que la case est vide
+        self.pion = None
 
     def get_colonne(self):
         return self.colonne

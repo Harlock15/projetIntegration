@@ -36,21 +36,20 @@ class Manager:
         for ligne in range(self.plato.get_line_count() - 1, -1, -1):
             case = self.plato.get_case(colonne,ligne)
             if case.estVide():
-                # Créer une instance de la classe Pion avec les bonnes valeurs
                 nouveau_pion = Pion((ligne,colonne), self.joueur_actuel)
                 case.set_pion(nouveau_pion)
                 print(f"({colonne}, {ligne})")
                 self.case = case
-                rst = True  # Indiquer que l'ajout de pion a réussi
-                break  # Ajoutez cette ligne pour arrêter la boucle après avoir ajouté le pion
+                rst = True
+                break
 
         if not rst:
             print(f"Aucune case vide trouvée dans la colonne {colonne}")
 
-        return rst  # Indiquer que l'ajout de pion a échoué
+        return rst
 
     def verif(self, pion):
-       # print(f"Le joueur {self.joueur_actuel.get_type()} joue!")
+
         row, col = pion.get_position()
 
         veri = 0
@@ -65,19 +64,49 @@ class Manager:
 
         veri = 0
 
-        for ij in range(self.plato.get_line_count()-1,-1,-1):
+        for ij in range(self.plato.get_column_count()):
             case = self.plato.get_case(ij, row)
 
             if not case.estVide() and case.get_pion().get_joueur() == self.joueur_actuel:
                 veri += 1
 
             elif not case.estVide() and case.get_pion().get_joueur() != self.joueur_actuel:
-                veri=0
-            if veri == 4:
-                return True
+               veri=0
 
+        if veri == 4:
+             return True
+
+        veri = 0
+        for i in range(-3, 4):
+             x = row + i
+             y = col - i
+             if 0 <= x < self.plato.get_line_count() and 0 <= y < self.plato.get_column_count():
+                 case = self.plato.get_case(y, x)
+                 if not case.estVide() and case.get_pion().get_joueur() == self.joueur_actuel:
+                     veri += 1
+                 elif not case.estVide() and case.get_pion().get_joueur() != self.joueur_actuel:
+                     veri = 0
+
+        if veri == 4:
+             return True
+
+        veri = 0
+        for i in range(-3, 4):
+            a = row - i
+            b = col - i
+            if 0 <= a < self.plato.get_line_count() and 0 <= b < self.plato.get_column_count():
+                case = self.plato.get_case(b, a)
+                if not case.estVide() and case.get_pion().get_joueur() == self.joueur_actuel:
+                    veri += 1
+                elif not case.estVide() and case.get_pion().get_joueur() != self.joueur_actuel:
+                    veri = 0
+
+        if veri == 4:
+            return True
 
         return False
+
+
 
     def play(self, colonne):
 

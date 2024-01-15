@@ -16,7 +16,7 @@ class Plateau:
         if 0 <= line < len(self.cases) and 0 <= column < len(self.cases[0]):
             return self.cases[line][column]
         else:
-            # Si les indices sont invalides, renvoyer une valeur par défaut ou élever une exception
+
             return None
 
     def get_column_count(self):
