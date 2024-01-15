@@ -55,8 +55,8 @@ class Negamax:
         return self.noeuds_parcourus
 
 
-if __name__ == "__main__":
-    coup_joue = "131313"
+if __name__=="__main__":
+    coup_joue = "7532455277545526"
     pos = Position(coup_joue)
     s = Negamax()
     print('-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-\n',"Score Final:",s.negamax(pos))
