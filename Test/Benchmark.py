@@ -3,6 +3,7 @@ import time
 from Algo.Negamax import Negamax
 from Algo.Position import Position
 
+
 class Benchmark:
     def __init__(self):
         self.nbrTotTest = 0
@@ -31,28 +32,30 @@ class Benchmark:
 
                 scoreAtt = ligne[1]
                 coup_joue = ligne[0]
-
+                    
                 pos = Position(coup_joue)
 
                 s = Negamax()
                 start = time.time()
-                scoreObt = s.negamax(pos)
+                weak = False
+                scoreObt = s.solve(pos)
                 self.tmpTot += time.time() - start
-
+                
                 self.nodeParcTot += s.noeuds_parcourus
-
                 if (str(scoreObt) != scoreAtt):
                     print(f"Erreur Ligne {x + 1} | ScoreObt: {scoreObt} ScoreAtt: {scoreAtt}")
                 else:
                     self.nbrTestOk += 1
-
+                    
             self.nodeParcMoy = self.nodeParcTot / self.nbrTotTest
             self.moyTmp = self.tmpTot / self.nbrTotTest
 
 
             print(f"----------\nFichier {fich}\nTest reussi: {self.nbrTestOk}/{self.nbrTotTest}\nMoy Noeud Parcourus: {self.nodeParcMoy}\nTmp Moy: {self.moyTmp}\n----------")
+                    
 
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     bench = Benchmark()
     bench.testNegamax()
