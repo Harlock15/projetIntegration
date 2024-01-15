@@ -17,7 +17,7 @@ class Negamax:
             if pos.canPlay(i) and pos.isWinningMove(i):
                 return (pos.WIDTH*pos.HEIGHT+1 - pos.nbMove())//2
 
-        max = -(pos.WIDTH*pos.HEIGHT-1-pos.nbMove())/2
+        max = (pos.WIDTH*pos.HEIGHT-1-pos.nbMove())//2
 
         if beta > max:
             beta = max
@@ -44,7 +44,7 @@ class Negamax:
         if weak:
             return self.negamax(pos, -1, 1)
         else:
-            return self.negamax(pos, - pos.WIDTH*pos.HEIGHT/2, pos.WIDTH*pos.HEIGHT/2)
+            return self.negamax(pos, -pos.WIDTH*pos.HEIGHT//2, pos.WIDTH*pos.HEIGHT//2)
 
     def checkDraw(self, pos: Position):
         if pos.moves == pos.WIDTH*pos.HEIGHT:
@@ -55,8 +55,8 @@ class Negamax:
         return self.noeuds_parcourus
 
 
-if __name__=="__main__":
-    coup_joue = "7532455277545526"
+if __name__ == "__main__":
+    coup_joue = "7422341735647741166133573473242566"
     pos = Position(coup_joue)
     s = Negamax()
-    print('-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-\n',"Score Final:",s.negamax(pos))
+    print('-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-\n',"Score Final:",s.solve(pos))

@@ -32,7 +32,7 @@ class Benchmark:
 
                 scoreAtt = ligne[1]
                 coup_joue = ligne[0]
-                    
+
                 pos = Position(coup_joue)
 
                 s = Negamax()
@@ -40,19 +40,21 @@ class Benchmark:
                 weak = False
                 scoreObt = s.solve(pos)
                 self.tmpTot += time.time() - start
-                
+
                 self.nodeParcTot += s.noeuds_parcourus
                 if (str(scoreObt) != scoreAtt):
                     print(f"Erreur Ligne {x + 1} | ScoreObt: {scoreObt} ScoreAtt: {scoreAtt}")
                 else:
+                    if((x+1)%100 == 0):
+                        print(f"Test {x + 1}: OK")
                     self.nbrTestOk += 1
-                    
+
             self.nodeParcMoy = self.nodeParcTot / self.nbrTotTest
             self.moyTmp = self.tmpTot / self.nbrTotTest
 
 
             print(f"----------\nFichier {fich}\nTest reussi: {self.nbrTestOk}/{self.nbrTotTest}\nMoy Noeud Parcourus: {self.nodeParcMoy}\nTmp Moy: {self.moyTmp}\n----------")
-                    
+
 
 
 
