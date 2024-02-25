@@ -13,7 +13,7 @@ class Negamax:
         if self.checkDraw(pos):
             return 0
 
-        for i in range(7):
+        for i in [3,2,4,1,5,0,6]:
             if pos.canPlay(i) and pos.isWinningMove(i):
                 return (pos.WIDTH*pos.HEIGHT+1 - pos.nbMove())//2
 

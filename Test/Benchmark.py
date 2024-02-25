@@ -64,4 +64,4 @@ class Benchmark:
 
 if __name__ == "__main__":
     bench = Benchmark()
-    bench.testNegamaxFich("Test_L3_R1")
+    bench.testNegamax()
