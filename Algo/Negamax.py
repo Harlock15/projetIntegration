@@ -24,9 +24,10 @@ class Negamax:
             if alpha >= beta:
                 return beta
 
-        for x in range(7):
+        for x in [3,2,4,1,5,0,6]:
             if pos.canPlay(x):
-                pos2 = Position(pos.coup_joue)
+                pos2 = Position()
+                pos2.initPos(pos)
                 pos2.play(x)
 
                 score = -(self.negamax(pos2, -beta, -alpha))
@@ -56,7 +57,8 @@ class Negamax:
 
 
 if __name__ == "__main__":
-    coup_joue = "7422341735647741166133573473242566"
-    pos = Position(coup_joue)
+    coup_joue = "52753311433677442422121"
+    pos = Position()
+    pos.initBoard(coup_joue)
     s = Negamax()
     print('-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-\n',"Score Final:",s.solve(pos))

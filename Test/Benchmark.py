@@ -36,7 +36,8 @@ class Benchmark:
                     scoreAtt = ligne[1]
                     coup_joue = ligne[0]
 
-                    pos = Position(coup_joue)
+                    pos = Position()
+                    pos.initBoard(coup_joue)
 
                     s = Negamax()
                     start = time.time()
@@ -48,7 +49,7 @@ class Benchmark:
                     if (str(scoreObt) != scoreAtt):
                         res.write(f"[{datetime.datetime.now()}] [{fich}] Erreur Ligne {x + 1} | ScoreObt: {scoreObt} ScoreAtt: {scoreAtt}\n")
                     else:
-                        if((x+1)%100 == 0):
+                        if((x+1)%10 == 0):
                             print(f"Test {x + 1}: OK")
                         self.nbrTestOk += 1
 
