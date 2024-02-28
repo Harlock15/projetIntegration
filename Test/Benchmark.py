@@ -21,7 +21,7 @@ class Benchmark:
 
 
     def testNegamaxFich(self, fich):
-        with open(f"./result", "w") as res:
+        with open(f"./result_{fich}", "w") as res:
             res.write(f"[{datetime.datetime.now()}]\n")
             self.nbrTotTest = 0
             self.tmpTot = 0

@@ -11,18 +11,18 @@ class Position:
         self.mask = 0
         self.moves = 0
 
-    def initPos(self,pos):
+    def initPos(self, pos):
         self.current_pos = pos.current_pos
         self.mask = pos.mask
         self.moves = pos.moves
 
-    def initBoard(self,coup_joue:str):
+    def initBoard(self, coup_joue:str):
         for i in range(len(coup_joue)):
             col = int(coup_joue[i]) - 1
             self.play(col)
 
 
-    def play(self,col:int):
+    def play(self, col:int):
         self.current_pos ^= self.mask
         self.mask |= self.mask + (1 << (col * (self.HEIGHT + 1)))
         self.moves += 1
@@ -48,15 +48,15 @@ class Position:
             return True
 
         test = pos & (pos >> 1)
-        if (test & (test >> 2)):
+        if(test & (test >> 2)):
             return True
 
         test = pos & (pos >> 8)
-        if (test & (test >> 16)):
+        if(test & (test >> 16)):
             return True
 
         test = pos & (pos >> 6)
-        if (test & (test >> 12)):
+        if(test & (test >> 12)):
             return True
 
         return False
