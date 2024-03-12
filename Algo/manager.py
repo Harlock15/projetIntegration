@@ -29,7 +29,8 @@ class Manager:
         self.joueur_actuel = joueur
 
     def prochainTour(self):
-        self.joueur_actuel = self.joueurO if self.joueur_actuel == self.joueurX else self.joueurX
+        if self.case.get_ligne() != -1:
+            self.joueur_actuel = self.joueurO if self.joueur_actuel == self.joueurX else self.joueurX
 
     def ajoutPion(self, colonne):
         rst = False
@@ -44,6 +45,7 @@ class Manager:
                 break
 
         if not rst:
+            self.case=Case(-1,-1)
             print(f"Aucune case vide trouvée dans la colonne {colonne}")
 
         return rst
@@ -58,6 +60,9 @@ class Manager:
 
             if not case.estVide() and case.get_pion().get_joueur() == self.joueur_actuel:
                 veri += 1
+
+            elif not case.estVide() and case.get_pion().get_joueur() != self.joueur_actuel:
+               veri=0
 
         if veri ==4:
             return True
@@ -109,13 +114,13 @@ class Manager:
 
 
     def play(self, colonne):
-
         pion_ajoute = self.ajoutPion(colonne)
 
         if pion_ajoute:
             if self.verif(self.case.get_pion()):
                 return False
         return True
+
     def get_joueurActuel(self):
         return self.joueur_actuel
     def get_case(self):

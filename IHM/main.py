@@ -2,7 +2,7 @@
 
 import tkinter as tk
 from Config.Configuration import Configuration
-from Data.Case import Case
+from PIL import Image, ImageTk
 from IHM.StrategyPaint import StrategyPaint
 from Algo.manager import Manager
 from IHM.victory import victory
@@ -12,8 +12,11 @@ class Main:
     def __init__(self):
         self.manager = Manager()
         self.strategy_paint = StrategyPaint(self.manager)
+        self.active = True
 
     def clic_souris(self, event, canvas):
+        if not self.active:
+            return
         x, y = event.x, event.y
 
 
@@ -27,8 +30,8 @@ class Main:
                 self.manager.prochainTour()
             else:
                 self.strategy_paint.paintP(self.manager.get_case(), canvas)
-
                 victory(self.manager.get_joueur_actuel().get_type())
+                self.active = False
 
         else:
             print("Clic en dehors du plateau.")
@@ -38,9 +41,13 @@ class Main:
         root.title("Simple Game Board")
         root.attributes('-fullscreen', True)
 
+        root.configure(bg='ivory')
+
         cell_size = Configuration.BLOCK_SIZE
+
         canvas = tk.Canvas(root, width=(self.manager.plato.get_column_count()+1) * cell_size,
                            height=(self.manager.plato.get_line_count()+1) * cell_size)
+
         canvas.pack()
 
 

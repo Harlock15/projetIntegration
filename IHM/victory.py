@@ -9,3 +9,4 @@ class victory(Toplevel):
         label = Label(self, text=f"Le joueur {gagnant} a gagné!")
         label.pack()
 
+
