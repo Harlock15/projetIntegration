@@ -48,17 +48,17 @@ class Negamax:
         return alpha
 
     def solve(self, pos: Position, weak=False):
-        min = -(pos.WIDTH*pos.HEIGHT - pos.nbMove())/2
-        max = (pos.WIDTH*(pos.HEIGHT + 1) - pos.nbMove())/2
+        min = -(pos.WIDTH * pos.HEIGHT - pos.nbMove())/2
+        max = (pos.WIDTH * pos.HEIGHT + 1 - pos.nbMove())/2
         if weak:
             min = -1
             max = 1
         while min < max:
-            med = min + (max - min)/2
-            if 0 >= med > min/2:
-                med = min/2
-            elif max/2 > med >= 0:
-                med = max/2
+            med = min + (max - min)//2
+            if 0 >= med > min//2:
+                med = min//2
+            elif max//2 > med >= 0:
+                med = max//2
             res = self.negamax(pos, med, med + 1)
             if res <= med:
                 max = res
