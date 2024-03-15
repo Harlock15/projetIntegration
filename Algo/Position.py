@@ -10,7 +10,7 @@ class Position:
         self.current_pos = 0
         self.mask = 0
         self.moves = 0
-        self.MIN_SCORE = -(self.WIDTH*self.HEIGHT)/2 + 3
+        self.MIN_SCORE = -(self.WIDTH*self.HEIGHT)//2 + 3
 
     def initPos(self, pos):
         self.current_pos = pos.current_pos
@@ -32,17 +32,71 @@ class Position:
     def nbMove(self):
         return self.moves
 
+    def posNonLose(self):
+        assert not self.canWinNext()
+        possible_mask = self.possible()
+        opponent_win = self.winningPosition(self.current_pos ^ self.mask, self.mask)
+        forced_moves = possible_mask & opponent_win
+        if forced_moves:
+            if forced_moves & (forced_moves - 1):  # check if there is more than one forced move
+                return 0  # the opponent has two winning moves and you cannot stop him
+            else:
+                possible_mask = forced_moves  # enforce to play the single forced move
+        return possible_mask & ~(opponent_win >> 1)  # avoid playing below an opponent winning spot
+
+    def play_sequence(self, seq):
+        for move in seq:
+            col = int(move) - 1
+            if not (0 <= col < self.WIDTH) or not self.canPlay(col) or self.isWinningMove(col):
+                break
+            self.play(col)
+
     def canPlay(self, colonne):
         return not self.mask & (1 << ((self.HEIGHT - 1) + (colonne * (self.HEIGHT + 1))))
 
     def isWinningMove(self, colonne):
-        pos = self.current_pos
-        maskTmp = self.mask
-        pos ^= maskTmp
-        maskTmp |= maskTmp + (1 << (colonne * (self.HEIGHT + 1)))
-        pos ^= maskTmp
+        return self.winningPosition(self.current_pos, self.mask) & self.possible() & (1 << ((self.HEIGHT - 1) + (colonne * (self.HEIGHT + 1))))
 
-        return self.checkWin(pos)
+    def canWinNext(self):
+        return self.winningPosition(self.current_pos, self.mask) & self.possible()
+
+    def winningPosition(self, position, mask):
+        # vertical
+        r = (position << 1) & (position << 2) & (position << 3)
+
+        # horizontal
+        p = (position << (self.HEIGHT + 1)) & (position << (2 * (self.HEIGHT + 1)))
+        r |= p & (position << (3 * (self.HEIGHT + 1)))
+        r |= p & (position >> (self.HEIGHT + 1))
+        p = (position >> (self.HEIGHT + 1)) & (position >> (2 * (self.HEIGHT + 1)))
+        r |= p & (position << (self.HEIGHT + 1))
+        r |= p & (position >> (3 * (self.HEIGHT + 1)))
+
+        # diagonal 1
+        p = (position << self.HEIGHT) & (position << (2 * self.HEIGHT))
+        r |= p & (position << (3 * self.HEIGHT))
+        r |= p & (position >> self.HEIGHT)
+        p = (position >> self.HEIGHT) & (position >> (2 * self.HEIGHT))
+        r |= p & (position << self.HEIGHT)
+        r |= p & (position >> (3 * self.HEIGHT))
+
+        # diagonal 2
+        p = (position << (self.HEIGHT + 2)) & (position << (2 * (self.HEIGHT + 2)))
+        r |= p & (position << (3 * (self.HEIGHT + 2)))
+        r |= p & (position >> (self.HEIGHT + 2))
+        p = (position >> (self.HEIGHT + 2)) & (position >> (2 * (self.HEIGHT + 2)))
+        r |= p & (position << (self.HEIGHT + 2))
+        r |= p & (position >> (3 * (self.HEIGHT + 2)))
+
+        return r
+
+    def possible(self):
+        return (self.mask + self.bottom(self.HEIGHT, self.WIDTH)) & self.bottom(self.WIDTH, self.HEIGHT) * ((1 << self.HEIGHT) - 1)
+
+
+    def bottom(self, width, height):
+        return 0 if width == 0 else self.bottom(width-1, height) | 1 << (width-1)*(height+1)
+
 
     def checkWin(self,pos):
         test = pos & (pos >> (self.HEIGHT + 1))
@@ -65,3 +119,6 @@ class Position:
 
     def getKey(self):
         return self.mask + self.current_pos
+
+    def columnMask(self, col):
+        return ((1 << self.HEIGHT)-1) << col*(self.HEIGHT + 1)

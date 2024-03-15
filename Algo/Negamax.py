@@ -10,17 +10,24 @@ class Negamax:
 
     def negamax(self, pos: Position, alpha, beta):
         assert alpha < beta
+        assert not pos.canWinNext()
+
         self.noeuds_parcourus += 1
+
+        next_moves = pos.posNonLose()
+        if next_moves == 0:
+            return -(pos.WIDTH * pos.HEIGHT - pos.nbMove()) // 2
 
         if self.checkDraw(pos):
             return 0
 
-        for i in [3, 2, 4, 1, 5, 0, 6]:
-            if pos.canPlay(i) and pos.isWinningMove(i):
-                return (pos.WIDTH*pos.HEIGHT+1 - pos.nbMove())//2
+        min = -(pos.WIDTH * pos.HEIGHT - 2 - pos.nbMove()) // 2
+        if alpha < min:
+            alpha = min
+            if alpha >= beta:
+                return alpha
 
         max = (pos.WIDTH*pos.HEIGHT-1-pos.nbMove())//2
-
         val = self.trans.get(pos.getKey())
         if val:
             max = val + pos.MIN_SCORE -1
@@ -31,7 +38,7 @@ class Negamax:
                 return beta
 
         for x in [3, 2, 4, 1, 5, 0, 6]:
-            if pos.canPlay(x):
+            if next_moves & pos.columnMask(x):
                 pos2 = Position()
                 pos2.initPos(pos)
                 pos2.play(x)
@@ -48,6 +55,9 @@ class Negamax:
         return alpha
 
     def solve(self, pos: Position, weak=False):
+        if pos.canWinNext():
+            return (pos.WIDTH * pos.HEIGHT + 1 - pos.nbMove()) // 2
+
         min = -(pos.WIDTH * pos.HEIGHT - pos.nbMove())/2
         max = (pos.WIDTH * pos.HEIGHT + 1 - pos.nbMove())/2
         if weak:
