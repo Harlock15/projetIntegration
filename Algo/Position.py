@@ -88,7 +88,9 @@ class Position:
         r |= p & (position << (self.HEIGHT + 2))
         r |= p & (position >> (3 * (self.HEIGHT + 2)))
 
-        return r
+        bottom_mask = self.bottom(self.WIDTH, self.HEIGHT)
+        board_mask = bottom_mask * ((1 << self.HEIGHT) - 1)
+        return r & (board_mask ^ mask)
 
     def possible(self):
         return (self.mask + self.bottom(self.HEIGHT, self.WIDTH)) & self.bottom(self.WIDTH, self.HEIGHT) * ((1 << self.HEIGHT) - 1)
