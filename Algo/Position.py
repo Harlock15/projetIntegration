@@ -10,6 +10,7 @@ class Position:
         self.current_pos = 0
         self.mask = 0
         self.moves = 0
+        self.MIN_SCORE = -(self.WIDTH*self.HEIGHT)/2 + 3
 
     def initPos(self, pos):
         self.current_pos = pos.current_pos
@@ -24,7 +25,8 @@ class Position:
 
     def play(self, col:int):
         self.current_pos ^= self.mask
-        self.mask |= self.mask + (1 << (col * (self.HEIGHT + 1)))
+        next_pos = self.mask | self.mask + (1 << (col * (self.HEIGHT + 1)))
+        self.mask = next_pos
         self.moves += 1
 
     def nbMove(self):
@@ -47,10 +49,6 @@ class Position:
         if(test & (test >> (self.HEIGHT + 1)*2)):
             return True
 
-        test = pos & (pos >> 1)
-        if(test & (test >> 2)):
-            return True
-
         test = pos & (pos >> 8)
         if(test & (test >> 16)):
             return True
@@ -59,4 +57,11 @@ class Position:
         if(test & (test >> 12)):
             return True
 
+        test = pos & (pos >> 1)
+        if(test & (test >> 2)):
+            return True
+
         return False
+
+    def getKey(self):
+        return self.mask + self.current_pos

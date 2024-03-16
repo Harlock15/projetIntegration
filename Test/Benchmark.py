@@ -42,7 +42,7 @@ class Benchmark:
                     s = Negamax()
                     start = time.time()
                     weak = False
-                    scoreObt = s.solve(pos)
+                    scoreObt = int(s.solve(pos))
                     self.tmpTot += time.time() - start
 
                     self.nodeParcTot += s.noeuds_parcourus
