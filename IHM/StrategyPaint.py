@@ -32,5 +32,6 @@ class StrategyPaint:
                            (ligne + 1) * self.cell_size, fill=couleur)
 
 
+
         
 

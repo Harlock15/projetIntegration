@@ -7,8 +7,8 @@ from Data.pion import Pion
 class Manager:
     def __init__(self):
         self.plato = builder.Builder.init_plato()
-        self.joueurX= builder.Builder.init_joueur('X')
-        self.joueurO= builder.Builder.init_joueur('O')
+        self.joueurX= builder.Builder.init_joueur('Rouge')
+        self.joueurO= builder.Builder.init_joueur('Jaune')
         self.nbTour = 0
         self.joueur_actuel = self.joueurX
         self.case=None
@@ -64,49 +64,62 @@ class Manager:
             elif not case.estVide() and case.get_pion().get_joueur() != self.joueur_actuel:
                veri=0
 
-        if veri ==4:
+        if veri >=4:
             return True
 
         veri = 0
 
         for ij in range(self.plato.get_column_count()):
-            case = self.plato.get_case(ij, row)
+            pion = self.plato.get_case(ij, row).get_pion()
 
-            if not case.estVide() and case.get_pion().get_joueur() == self.joueur_actuel:
+            if pion is None:
+                continue
+
+            if pion.get_joueur() == self.joueur_actuel:
+                veri = 1
+
+            for offset in range(1, 4):  # Vérifier jusqu'à 4 pions consécutifs
+                if ij + offset >= self.plato.get_column_count():
+                    break  # Dépassement du bord de la grille
+                adjacent_pion = self.plato.get_case(ij + offset, row).get_pion()
+                if adjacent_pion is None or adjacent_pion.get_joueur() != self.joueur_actuel:
+                    break  # Pion différent ou case vide, arrêter la recherche
                 veri += 1
 
-            elif not case.estVide() and case.get_pion().get_joueur() != self.joueur_actuel:
-               veri=0
+                # Vérifier si nous avons trouvé 4 pions consécutifs
+            if  veri >= 4:
+                return True  # Séquence trouvée
 
-        if veri == 4:
-             return True
 
-        veri = 0
-        for i in range(-3, 4):
-             x = row + i
-             y = col - i
-             if 0 <= x < self.plato.get_line_count() and 0 <= y < self.plato.get_column_count():
-                 case = self.plato.get_case(y, x)
-                 if not case.estVide() and case.get_pion().get_joueur() == self.joueur_actuel:
-                     veri += 1
-                 elif not case.estVide() and case.get_pion().get_joueur() != self.joueur_actuel:
-                     veri = 0
-
-        if veri == 4:
-             return True
 
         veri = 0
         for i in range(-3, 4):
-            a = row - i
-            b = col - i
-            if 0 <= a < self.plato.get_line_count() and 0 <= b < self.plato.get_column_count():
-                case = self.plato.get_case(b, a)
+            x = row + i
+            y = col - i
+            if 0 <= x < self.plato.get_line_count() and 0 <= y < self.plato.get_column_count():
+                case = self.plato.get_case(y, x)
                 if not case.estVide() and case.get_pion().get_joueur() == self.joueur_actuel:
                     veri += 1
-                elif not case.estVide() and case.get_pion().get_joueur() != self.joueur_actuel:
+                else:
                     veri = 0
 
-        if veri == 4:
+        if veri >= 4:
+            return True
+
+        veri = 0
+
+        # Parcourir les cases en diagonale inverse
+        for i in range(-3, 4):
+            x = row - i
+            y = col - i
+            if 0 <= x < self.plato.get_line_count() and 0 <= y < self.plato.get_column_count():
+                case = self.plato.get_case(y, x)
+                if not case.estVide() and case.get_pion().get_joueur() == self.joueur_actuel:
+                    veri += 1
+                else:
+                    veri = 0  # Réinitialiser à zéro seulement si le pion est différent
+
+        if veri >= 4:
             return True
 
         return False
@@ -115,7 +128,8 @@ class Manager:
 
     def play(self, colonne):
         pion_ajoute = self.ajoutPion(colonne)
-
+        a=self.verif(self.case.get_pion())
+        print(f"{a}")
         if pion_ajoute:
             if self.verif(self.case.get_pion()):
                 return False
