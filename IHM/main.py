@@ -44,22 +44,21 @@ class Main:
             ligne = y // Configuration.BLOCK_SIZE
             colonne = x // Configuration.BLOCK_SIZE
 
-            print(colonne)
             # Vérification si les coordonnées se trouvent dans les limites du plateau
             if 0 <= ligne < self.manager.plato.get_line_count() and 0 <= colonne < self.manager.plato.get_column_count():
                 if self.manager.play(colonne):  # Vérification si le coup est valide et s'il y a un gagnant
                     self.strategy_paint.paintP(self.manager.get_case(), canvas)  # Dessin du pion sur le plateau
                     self.manager.prochainTour()  # Passage au prochain tour
+                    canvas.update()
+                    self.turnOfIA(canvas)
                 else:
                     self.strategy_paint.paintP(self.manager.get_case(), canvas)  # Dessin du pion sur le plateau
-                    victory(self.manager.get_joueur_actuel().get_type())  # Affichage du message de victoire
+                    victory(self.manager.get_joueur_actuel().get_type(),self.manager)  # Affichage du message de victoire
                     self.active = False  # Indiquer que le jeu est terminé
 
             else:
                 print("Clic en dehors du plateau.")  # Message en cas de clic en dehors du plateau
 
-            canvas.update()
-            self.turnOfIA(canvas)
 
     def turnOfIA(self, canvas):
         coup_joue = self.manager.get_board()
@@ -74,16 +73,16 @@ class Main:
             self.manager.prochainTour()  # Passage au prochain tour
         else:
             self.strategy_paint.paintP(self.manager.get_case(), canvas)  # Dessin du pion sur le plateau
-            victory(self.manager.get_joueur_actuel().get_type())  # Affichage du message de victoire
+            victory(self.manager.get_joueur_actuel().get_type(),self.manager)  # Affichage du message de victoire
             self.active = False  # Indiquer que le jeu est terminé
         self.blc = True
 
     # Méthode principale pour lancer l'application
     def main(self):
-        root.title("Simple Game Board")  # Titre de la fenêtre
-        root.attributes('-fullscreen', True)  # Affichage en mode plein écran
+        self.root.title("Simple Game Board")  # Titre de la fenêtre
+        self.root.attributes('-fullscreen', True)  # Affichage en mode plein écran
 
-        root.configure(bg='ivory')  # Couleur de fond de la fenêtre
+        self.root.configure(bg='ivory')  # Couleur de fond de la fenêtre
 
         cell_size = Configuration.BLOCK_SIZE  # Taille des cellules du plateau
 

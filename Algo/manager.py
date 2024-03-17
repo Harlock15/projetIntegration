@@ -48,7 +48,7 @@ class Manager:
             self.joueur_actuel = self.joueurO if self.joueur_actuel == self.joueurX else self.joueurX
 
     # Méthode pour ajouter un pion dans une colonne spécifique
-    def ajoutPion(self, colonne, verif):
+    def ajoutPion(self, colonne):
         self.board.append(colonne + 1)
 
 
