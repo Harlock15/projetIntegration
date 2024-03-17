@@ -13,6 +13,17 @@ class Main:
         self.manager = Manager()
         self.strategy_paint = StrategyPaint(self.manager)
         self.active = True
+        self.canvas=None
+        self.root = tk.Tk()
+        self.manager.add_callback(self.on_fin_changed)
+
+    def on_fin_changed(self):
+        if self.manager.get_fin() == 0:
+            self.strategy_paint.effacer_pions(self.canvas, self.manager.get_plato())
+            self.active = True
+        elif self.manager.get_fin() == 1:
+            self.root.destroy()
+
 
     def clic_souris(self, event, canvas):
         if not self.active:
@@ -30,34 +41,32 @@ class Main:
                 self.manager.prochainTour()
             else:
                 self.strategy_paint.paintP(self.manager.get_case(), canvas)
-                victory(self.manager.get_joueur_actuel().get_type())
+                victory(self.manager.get_joueur_actuel().get_type(),self.manager)
                 self.active = False
 
         else:
             print("Clic en dehors du plateau.")
 
-    def main(self):
-        root = tk.Tk()
-        root.title("Simple Game Board")
-        root.attributes('-fullscreen', True)
 
-        root.configure(bg='ivory')
+    def main(self):
+
+        self.root.title("Simple Game Board")
+        self.root.attributes('-fullscreen', True)
+
+        self.root.configure(bg='ivory')
 
         cell_size = Configuration.BLOCK_SIZE
 
-        canvas = tk.Canvas(root, width=(self.manager.plato.get_column_count()+1) * cell_size,
+        self.canvas = tk.Canvas(self.root, width=(self.manager.plato.get_column_count()+1) * cell_size,
                            height=(self.manager.plato.get_line_count()+1) * cell_size)
 
-        canvas.pack()
+        self.canvas.pack()
+
+        self.strategy_paint.paint(self.canvas, self.manager.plato)
 
 
-        self.strategy_paint.paint(canvas, self.manager.plato)
+        self.canvas.bind("<Button-1>", lambda event: self.clic_souris(event, self.canvas))
+
+        self.root.mainloop()
 
 
-        canvas.bind("<Button-1>", lambda event: self.clic_souris(event, canvas))
-
-        root.mainloop()
-
-if __name__ == "__main__":
-    main_instance = Main()
-    main_instance.main()
