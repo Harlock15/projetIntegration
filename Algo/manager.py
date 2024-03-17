@@ -12,8 +12,11 @@ class Manager:
         self.joueur_actuel = self.joueurX  # Initialisation du joueur actuel avec le joueur X
         self.case = None  # Initialisation de l'attribut case à None
         self.board = []
+        self.fin=-1
+        self.callbacks = []
 
     # Méthodes getters pour récupérer les joueurs
+
     def get_joueurX(self):
         return self.joueurX
 
@@ -23,7 +26,19 @@ class Manager:
     # Méthodes getters et setters pour récupérer et définir le joueur actuel
     def get_joueur_actuel(self):
         return self.joueur_actuel
+    def get_plato(self):
+        return self.plato
 
+    def get_fin(self):
+        return self.fin
+
+    def set_fin(self, value):
+        self.fin = value
+        for callback in self.callbacks:
+            callback()
+
+    def add_callback(self, callback):
+        self.callbacks.append(callback)
     def set_joueur_actuel(self, joueur):
         self.joueur_actuel = joueur
 
@@ -116,11 +131,8 @@ class Manager:
 
         return False  # Aucune configuration gagnante trouvée
 
-    # Méthode pour effectuer un coup dans une colonne spécifique
-    def play(self, colonne,verif = False):
-        pion_ajoute = self.ajoutPion(colonne,verif)  # Ajout d'un pion dans la colonne spécifiée
-        a = self.verif(self.case.get_pion())  # Vérification s'il y a un gagnant après l'ajout du pion
-        print(f"{a}")  # Affichage du résultat de la vérification
+    def play(self, colonne):
+        pion_ajoute = self.ajoutPion(colonne)
         if pion_ajoute:
             if self.verif(self.case.get_pion()):  # Si un pion a été ajouté et qu'il y a un gagnant
                 return False  # Retourne False pour indiquer que la partie est terminée

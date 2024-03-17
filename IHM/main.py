@@ -15,6 +15,18 @@ class Main:
         self.strategy_paint = StrategyPaint(self.manager)  # Instance de StrategyPaint pour dessiner le plateau de jeu
         self.active = True  # Variable pour indiquer si le jeu est en cours ou non
         self.blc = True
+        self.canvas=None
+        self.root = tk.Tk()
+        self.manager.add_callback(self.on_fin_changed)
+
+    def on_fin_changed(self):
+        if self.manager.get_fin() == 0:
+            self.strategy_paint.effacer_pions(self.canvas, self.manager.get_plato())
+            self.active = True
+        elif self.manager.get_fin() == 1:
+            self.root.destroy()
+
+
 
     # Méthode pour gérer les clics de souris sur le canvas
     def clic_souris(self, event, canvas):
@@ -57,19 +69,17 @@ class Main:
         negamax = Negamax()
         valeur, col = negamax.solve(pos)
         print(valeur, col)
-        if self.manager.play(col,True):  # Vérification si le coup est valide et s'il y a un gagnant
+        if self.manager.play(col):  # Vérification si le coup est valide et s'il y a un gagnant
             self.strategy_paint.paintP(self.manager.get_case(), canvas)  # Dessin du pion sur le plateau
             self.manager.prochainTour()  # Passage au prochain tour
         else:
             self.strategy_paint.paintP(self.manager.get_case(), canvas)  # Dessin du pion sur le plateau
             victory(self.manager.get_joueur_actuel().get_type())  # Affichage du message de victoire
             self.active = False  # Indiquer que le jeu est terminé
-
         self.blc = True
 
     # Méthode principale pour lancer l'application
     def main(self):
-        root = tk.Tk()  # Création de la fenêtre principale
         root.title("Simple Game Board")  # Titre de la fenêtre
         root.attributes('-fullscreen', True)  # Affichage en mode plein écran
 
@@ -77,18 +87,16 @@ class Main:
 
         cell_size = Configuration.BLOCK_SIZE  # Taille des cellules du plateau
 
-        canvas = tk.Canvas(root, width=(self.manager.plato.get_column_count()+1) * cell_size,
-                           height=(self.manager.plato.get_line_count()+1) * cell_size)  # Création du canvas
+        self.canvas = tk.Canvas(self.root, width=(self.manager.plato.get_column_count()+1) * cell_size,
+                           height=(self.manager.plato.get_line_count()+1) * cell_size)
 
-        canvas.pack()  # Affichage du canvas dans la fenêtre
+        self.canvas.pack()
 
-        self.strategy_paint.paint(canvas, self.manager.plato)  # Dessin du plateau de jeu
+        self.strategy_paint.paint(self.canvas, self.manager.plato)
 
-        canvas.bind("<Button-1>", lambda event: self.clic_souris(event, canvas))  # Liaison de l'événement de clic de souris avec la méthode clic_souris
 
-        root.mainloop()  # Lancement de la boucle principale de l'interface graphique
+        self.canvas.bind("<Button-1>", lambda event: self.clic_souris(event, self.canvas))
 
-# Vérification si le script est exécuté en tant que programme principal
-if __name__ == "__main__":
-    main_instance = Main()  # Création d'une instance de la classe Main
-    main_instance.main()  # Appel de la méthode main pour lancer l'application
+        self.root.mainloop()
+
+
