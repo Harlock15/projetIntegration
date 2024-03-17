@@ -12,6 +12,8 @@ class Manager:
         self.nbTour = 0
         self.joueur_actuel = self.joueurX
         self.case=None
+        self.fin=-1
+        self.callbacks = []
 
 
 
@@ -24,7 +26,19 @@ class Manager:
 
     def get_joueur_actuel(self):
         return self.joueur_actuel
+    def get_plato(self):
+        return self.plato
 
+    def get_fin(self):
+        return self.fin
+
+    def set_fin(self, value):
+        self.fin = value
+        for callback in self.callbacks:
+            callback()
+
+    def add_callback(self, callback):
+        self.callbacks.append(callback)
     def set_joueur_actuel(self, joueur):
         self.joueur_actuel = joueur
 
@@ -128,8 +142,6 @@ class Manager:
 
     def play(self, colonne):
         pion_ajoute = self.ajoutPion(colonne)
-        a=self.verif(self.case.get_pion())
-        print(f"{a}")
         if pion_ajoute:
             if self.verif(self.case.get_pion()):
                 return False

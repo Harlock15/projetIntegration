@@ -29,9 +29,19 @@ class StrategyPaint:
         couleur = "red" if joueur == self.manager.get_joueurX() else "yellow"
 
         canvas.create_oval(colonne * self.cell_size, ligne * self.cell_size, (colonne + 1) * self.cell_size,
-                           (ligne + 1) * self.cell_size, fill=couleur)
+                           (ligne + 1) * self.cell_size, fill=couleur,tags="pion")
 
+    def effacer_pions(self, canvas, plato):
 
+        rows = plato.get_line_count()
+        columns = plato.get_column_count()
 
+        for row in range(rows):
+            for col in range(columns):
+                case = plato.get_case(col,row)
+                if case.get_pion() is not None:
+                    case.set_pion(None)
+
+        canvas.delete("pion")
         
 
