@@ -54,4 +54,5 @@ class Accueil:
         main_instance.main()
 
 
-accueil_instance = Accueil()
+if __name__ == "__main__":
+    accueil = Accueil()

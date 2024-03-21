@@ -1,77 +1,67 @@
+import numpy as np
 class Position:
-    def __init__(self, coup_joue:str):
+    """
+    Classe qui gére les informations sur les positions des jetons sur le plateau
+    Cette classe utilise un bitboard pour stocker l'information.
+    """
+    def __init__(self):
         self.WIDTH = 7
         self.HEIGHT = 6
-        self.coup_joue = coup_joue
-        self.board, self.height, self.moves = self.readString()
+        self.current_pos = 0
+        self.mask = 0
+        self.moves = 0
+        self.MIN_SCORE = -(self.WIDTH*self.HEIGHT)/2 + 3
 
-    def canPlay(self, colonne):
-        colonne -= 1
-        return self.height[colonne] < self.HEIGHT
+    def initPos(self, pos):
+        self.current_pos = pos.current_pos
+        self.mask = pos.mask
+        self.moves = pos.moves
 
-    def play(self, colonne):
-        colonne -= 1
-        self.board[colonne][self.height[colonne]] = 1 + self.moves%2
-        self.height[colonne] += 1
+    def initBoard(self, coup_joue:str):
+        for i in range(len(coup_joue)):
+            col = int(coup_joue[i]) - 1
+            self.play(col)
+
+
+    def play(self, col:int):
+        self.current_pos ^= self.mask
+        next_pos = self.mask | self.mask + (1 << (col * (self.HEIGHT + 1)))
+        self.mask = next_pos
         self.moves += 1
-        self.coup_joue += str(colonne+1)
-
-    def isWinningMove(self, colonne):
-        colonne -= 1
-        current_player = 1 + self.moves % 2
-        if self.height[colonne] >= 3 and self.board[colonne][self.height[colonne]-1] == current_player and self.board[colonne][self.height[colonne] - 2] == current_player and self.board[colonne][self.height[colonne] - 3] == current_player:
-            return True
-
-        for i in range(-1, 2):
-            nb = 0
-            for ii in [-1, 1]:
-                x = colonne + ii
-                y = self.height[colonne] + i*ii
-                while 0 <= x < self.WIDTH and 0 <= y < self.HEIGHT and self.board[x][y] == current_player:
-                    nb += 1
-                    x += ii
-                    y += i*ii
-            if nb >= 3:
-                return True
-        return False
 
     def nbMove(self):
         return self.moves
 
-    def affBoard(self):
-        for j in range(5,-1,-1):
-            for i in range(7):
-                print(self.board[i][j], end="|")
-            print("")
+    def canPlay(self, colonne):
+        return not self.mask & (1 << ((self.HEIGHT - 1) + (colonne * (self.HEIGHT + 1))))
 
-    def readString(self):
-        move = len(self.coup_joue)  # Le nombre de coup joue
-        height = [0, 0, 0, 0, 0, 0, 0]  # Le nombre de jeton par colonne
-        board = [[0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0]]     # 0 si rien n'a été jouer dans cette emplacement
-        # 1 si le premier a avoir jouer possède le pions jouer et
-        # 2 si c'est l'autre joueur
-        for i in range(len(self.coup_joue)):
-            board[int(self.coup_joue[i])-1][height[int(self.coup_joue[i])-1]] = 1 + i % 2
-            height[int(self.coup_joue[i]) - 1] += 1
+    def isWinningMove(self, colonne):
+        pos = self.current_pos
+        maskTmp = self.mask
+        pos ^= maskTmp
+        maskTmp |= maskTmp + (1 << (colonne * (self.HEIGHT + 1)))
+        pos ^= maskTmp
 
-        return board, height, move
+        return self.checkWin(pos)
 
+    def checkWin(self,pos):
+        test = pos & (pos >> (self.HEIGHT + 1))
+        if(test & (test >> (self.HEIGHT + 1)*2)):
+            return True
 
-if __name__=="__main__":
-    coup_joue = "313131"
-    pos = Position(coup_joue)
-    pos.affBoard()
-    print(pos.isWinningMove(3))
-    print(pos.canPlay(3))
-    pos.play(3)
+        test = pos & (pos >> 8)
+        if(test & (test >> 16)):
+            return True
 
-    pos.play(3)
-    pos.play(3)
-    pos.affBoard()
-    print(pos.canPlay(3))
+        test = pos & (pos >> 6)
+        if(test & (test >> 12)):
+            return True
+
+        test = pos & (pos >> 1)
+        if(test & (test >> 2)):
+            return True
+
+        return False
+
+    def getKey(self):
+        return self.mask + self.current_pos
