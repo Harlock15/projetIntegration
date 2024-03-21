@@ -68,75 +68,124 @@ class Manager:
 
         row, col = pion.get_position()
 
-        veri = 0
-        for ii in range(self.plato.get_line_count() - 1, -1, -1):
-            case = self.plato.get_case(col,ii)
+        # Initialiser le compteur de pions alignés verticalement
+        veri = 1  # On commence avec le pion lui-même déjà compté
+
+        # Vérifier les pions en dessous du pion actuel dans la même colonne
+        for i in range(row + 1, self.plato.get_line_count()):
+            case = self.plato.get_case(col, i)
+            if not case.estVide() and case.get_pion().get_joueur() == self.joueur_actuel:
+                # Si la case contient un pion du même joueur, incrémentez le compteur
+                veri += 1
+            else:
+                # Si la case est vide ou contient un pion d'un autre joueur, arrêtez la vérification
+                break
+
+        # Vérifier les pions au-dessus du pion actuel dans la même colonne
+        for i in range(row - 1, -1, -1):
+            case = self.plato.get_case(col, i)
 
             if not case.estVide() and case.get_pion().get_joueur() == self.joueur_actuel:
+                # Si la case contient un pion du même joueur, incrémentez le compteur
                 veri += 1
+            else:
+                # Si la case est vide ou contient un pion d'un autre joueur, arrêtez la vérification
+                break
 
-            elif not case.estVide() and case.get_pion().get_joueur() != self.joueur_actuel:
-               veri=0
-
-        if veri >=4:
+        # Vérifier si le nombre de pions alignés est supérieur ou égal à 4
+        if veri >= 4:
+            print("vertical")
             return True
 
-        veri = 0
+        veri = 1  # On commence avec le pion lui-même déjà compté
 
-        for ij in range(self.plato.get_column_count()):
-            pion = self.plato.get_case(ij, row).get_pion()
 
-            if pion is None:
-                continue
+        for i in range(col + 1,self.plato.get_column_count()):
+            case = self.plato.get_case(i,row)
 
-            if pion.get_joueur() == self.joueur_actuel:
-                veri = 1
-
-            for offset in range(1, 4):  # Vérifier jusqu'à 4 pions consécutifs
-                if ij + offset >= self.plato.get_column_count():
-                    break  # Dépassement du bord de la grille
-                adjacent_pion = self.plato.get_case(ij + offset, row).get_pion()
-                if adjacent_pion is None or adjacent_pion.get_joueur() != self.joueur_actuel:
-                    break  # Pion différent ou case vide, arrêter la recherche
+            if not case.estVide() and case.get_pion().get_joueur() == self.joueur_actuel:
+                # Si la case contient un pion du même joueur, incrémentez le compteur
                 veri += 1
+            else:
+                # Si la case est vide ou contient un pion d'un autre joueur, arrêtez la vérification
+                break
 
-                # Vérifier si nous avons trouvé 4 pions consécutifs
-            if  veri >= 4:
-                return True  # Séquence trouvée
+        for i in range(col - 1, -1, -1):
+            case = self.plato.get_case(i,row)
 
+            if not case.estVide() and case.get_pion().get_joueur() == self.joueur_actuel:
 
+                # Si la case contient un pion du même joueur, incrémentez le compteur
+                veri += 1
+            else:
+                # Si la case est vide ou contient un pion d'un autre joueur, arrêtez la vérification
+                break
 
-        veri = 0
-        for i in range(-3, 4):
-            x = row + i
-            y = col - i
-            if 0 <= x < self.plato.get_line_count() and 0 <= y < self.plato.get_column_count():
-                case = self.plato.get_case(y, x)
-                if not case.estVide() and case.get_pion().get_joueur() == self.joueur_actuel:
-                    veri += 1
-                else:
-                    veri = 0
-
+        # Vérifier si le nombre de pions alignés est supérieur ou égal à 4
         if veri >= 4:
+            print("horizontal")
+            return True
+        veri = 1  # On commence avec le pion lui-même déjà compté
+
+        # Vérifier la diagonale en bas à droite du pion actuel
+        i, j = row + 1, col + 1
+        while i < self.plato.get_line_count() and j < self.plato.get_column_count():
+            case = self.plato.get_case(j, i)
+            if not case.estVide() and case.get_pion().get_joueur() == self.joueur_actuel:
+                veri += 1
+            else:
+                break
+            i += 1
+            j += 1
+
+        # Vérifier la diagonale en haut à gauche du pion actuel
+        i, j = row - 1, col - 1
+        while i >= 0 and j >= 0:
+            case = self.plato.get_case(j, i)
+            if not case.estVide() and case.get_pion().get_joueur() == self.joueur_actuel:
+                veri += 1
+            else:
+                break
+            i -= 1
+            j -= 1
+
+        # Vérifier si le nombre de pions alignés est supérieur ou égal à 4
+        if veri >= 4:
+            print("Diagonale bas-droite et haut-gauche")
             return True
 
-        veri = 0
+        veri = 1  # Réinitialiser le compteur
 
-        # Parcourir les cases en diagonale inverse
-        for i in range(-3, 4):
-            x = row - i
-            y = col - i
-            if 0 <= x < self.plato.get_line_count() and 0 <= y < self.plato.get_column_count():
-                case = self.plato.get_case(y, x)
-                if not case.estVide() and case.get_pion().get_joueur() == self.joueur_actuel:
-                    veri += 1
-                else:
-                    veri = 0  # Réinitialiser à zéro seulement si le pion est différent
+        # Vérifier la diagonale en bas à gauche du pion actuel
+        i, j = row + 1, col - 1
+        while i < self.plato.get_line_count() and j >= 0:
+            case = self.plato.get_case(j, i)
+            if not case.estVide() and case.get_pion().get_joueur() == self.joueur_actuel:
+                veri += 1
+            else:
+                break
+            i += 1
+            j -= 1
 
+        # Vérifier la diagonale en haut à droite du pion actuel
+        i, j = row - 1, col + 1
+        while i >= 0 and j < self.plato.get_column_count():
+            case = self.plato.get_case(j, i)
+            if not case.estVide() and case.get_pion().get_joueur() == self.joueur_actuel:
+                veri += 1
+            else:
+                break
+            i -= 1
+            j += 1
+
+        # Vérifier si le nombre de pions alignés est supérieur ou égal à 4
         if veri >= 4:
+            print("Diagonale bas-gauche et haut-droite")
             return True
 
         return False
+
+
 
 
 
