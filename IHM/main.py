@@ -1,4 +1,11 @@
-import tkinter as tk  # Importation du module tkinter pour l'interface graphique
+
+# main.py
+
+import tkinter as tk
+from Config.Configuration import Configuration
+from IHM.StrategyPaint import StrategyPaint
+from Algo.manager import Manager
+from IHM.victory import victory
 
 from Algo.Negamax_for_game import Negamax
 from Algo.Position import Position
