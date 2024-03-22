@@ -51,6 +51,7 @@ class Main:
             ligne = y // Configuration.BLOCK_SIZE
             colonne = x // Configuration.BLOCK_SIZE
 
+            ##self.turnOfIA(canvas)
             # Vérification si les coordonnées se trouvent dans les limites du plateau
             if 0 <= ligne < self.manager.plato.get_line_count() and 0 <= colonne < self.manager.plato.get_column_count():
                 if self.manager.play(colonne):  # Vérification si le coup est valide et s'il y a un gagnant

@@ -15,7 +15,11 @@ class Manager:
         self.fin=-1
         self.callbacks = []
 
+    def reinitBoard(self):
+        self.board = []
+
     # Méthodes getters pour récupérer les joueurs
+
 
     def get_joueurX(self):
         return self.joueurX
@@ -36,6 +40,7 @@ class Manager:
         self.fin = value
         for callback in self.callbacks:
             callback()
+        self.reinitBoard()
 
     def add_callback(self, callback):
         self.callbacks.append(callback)
