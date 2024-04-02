@@ -1,5 +1,7 @@
-from Algo.Position import Position  # Importation de la classe Position depuis le module Algo.Position
-from Algo.Transposition import Transposition  # Importation de la classe Transposition depuis le module Algo.Transposition
+# Importation de la classe Position depuis le module Algo.Position
+from Algo.Position import Position  
+# Importation de la classe Transposition depuis le module Algo.Transposition
+from Algo.Transposition import Transposition  
 
 
 class Negamax:
